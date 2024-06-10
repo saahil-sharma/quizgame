@@ -1,8 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+	"os"
+)
 
 func main() {
-	var number int = 45
-	fmt.Println(number)
+	csvFilename := flag.String("csv", "problems.csv", "a csv file")
+	flag.Parse()
+	_ = csvFilename
+
+	file, err := os.Open(*csvFilename)
+	if err != nil {
+		fmt.Printf("Failed to open the csv file: %s: " * csvFilename)
+		os.Exit(1)
+	}
+	_ = file
 }
