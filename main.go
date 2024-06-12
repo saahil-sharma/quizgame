@@ -46,7 +46,7 @@ func main() {
 		var answer string
 		_, err2 := fmt.Scanf("%s\n", &answer)
 		if err2 != nil {
-			return
+			exit("Could not understand your answer. ")
 		}
 		if answer == p.a {
 			counter++
