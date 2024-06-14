@@ -26,7 +26,7 @@ This should create an executable of the name 'quizgame' which can be ran with:
 ```
 ./quizgame
 ```
-This does require that you have the Go language installed here, which can be found [here](go.dev). 
+This does require that you have the Go language installed here, which can be found [here](https://go.dev). 
 
 Thanks for checking out my code! Chances are there might be something wrong or not working, and I would love any feedback. 
 You can either submit a PR or email me at "saahilsharma1017[@]gmail[dot]com". 
