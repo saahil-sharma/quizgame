@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 type problem struct {
@@ -20,6 +21,7 @@ func main() {
 	//Second parameter sets the default value to "problems.csv".
 	//flag.Parse() is needed at the end of all flag.* calls.
 	csvFilename := flag.String("csv", "problems.csv", "a csv file")
+	timeLimit := flag.Int("limit", 30, "the time limit for the quiz in seconds")
 	flag.Parse()
 
 	//Open the file.
@@ -40,20 +42,30 @@ func main() {
 	}
 	problems := parseLines(lines)
 
+	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
+	<-timer.C
 	counter := 0
+
 	for i, p := range problems {
 		fmt.Printf("Problem: #%d: %s = ", i+1, p.q)
-		var answer string
-		_, err2 := fmt.Scanf("%s\n", &answer)
-		if err2 != nil {
-			exit("Could not understand your answer. ")
-		}
-		if answer == p.a {
-			counter++
+		answerCh := make(chan string)
+		go func() {
+			var answer string
+			fmt.Scanf("%s\n", answer)
+			answerCh <- answer
+		}()
+		select {
+		case <-timer.C:
+			fmt.Printf("You scored %d out of %d. ", counter, len(problems))
+			return
+		case answer := <-answerCh:
+			if answer == p.a {
+				counter++
+			}
 		}
 	}
-	fmt.Printf("You scored %d out of %d. ", counter, len(problems))
-	fmt.Println(getMood(counter, problems))
+
+	fmt.Printf("You scored %d out of %d. %s", counter, len(problems), getMood(counter, problems))
 }
 
 // Function to parse the lines of a 2D array.
